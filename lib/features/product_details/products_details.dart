@@ -1,10 +1,10 @@
-import 'package:fashion_app/compants/cart_details.dart';
-import 'package:fashion_app/compants/custom_appbar.dart';
-import 'package:fashion_app/compants/custom_buttom.dart';
-import 'package:fashion_app/compants/header.dart';
-import 'package:fashion_app/core/colors.dart';
+import 'package:fashion_app/features/compants/cart_details.dart';
+import 'package:fashion_app/features/compants/custom_appbar.dart';
+import 'package:fashion_app/features/compants/custom_buttom.dart';
+import 'package:fashion_app/features/compants/header.dart';
+import 'package:fashion_app/features/core/colors.dart';
 // ignore: unused_import
-import 'package:fashion_app/model/product_model.dart';
+import 'package:fashion_app/features/model/product_model.dart';
 import 'package:fashion_app/screens/place_order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

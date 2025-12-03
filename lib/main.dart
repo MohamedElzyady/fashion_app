@@ -1,4 +1,4 @@
-import 'package:fashion_app/screens/home.dart';
+import 'package:fashion_app/features/home/home.dart';
 import 'package:flutter/material.dart';
 
 

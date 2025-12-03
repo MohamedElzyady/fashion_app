@@ -1,4 +1,4 @@
-import 'package:fashion_app/core/colors.dart';
+import 'package:fashion_app/features/core/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';

@@ -1,7 +1,7 @@
-import 'package:fashion_app/compants/custo_text_field.dart';
-import 'package:fashion_app/compants/custom_appbar.dart';
-import 'package:fashion_app/compants/custom_buttom.dart';
-import 'package:fashion_app/compants/header.dart';
+import 'package:fashion_app/features/compants/custo_text_field.dart';
+import 'package:fashion_app/features/compants/custom_appbar.dart';
+import 'package:fashion_app/features/compants/custom_buttom.dart';
+import 'package:fashion_app/features/compants/header.dart';
 import 'package:fashion_app/screens/place_order.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';

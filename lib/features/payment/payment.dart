@@ -1,4 +1,5 @@
-import 'package:fashion_app/compants/custom_buttom.dart';
+import 'package:fashion_app/features/compants/custom_buttom.dart';
+import 'package:fashion_app/features/payment/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 
@@ -21,25 +22,8 @@ class _PaymentState extends State<Payment> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Payment Methods",
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-              // color: Color(0xFF33384B),
-              fontSize: 16,
-            ),
-          ),
-          // backgroundColor: Colors.white,
-          // foregroundColor: Colors.black,
-          elevation: 0,
-          actions: [
-            Icon(Icons.search),
-            SizedBox(width: 15),
-            Icon(Icons.favorite_border),
-            SizedBox(width: 10),
-          ],
-        ),
+        appBar: AppbarPayment(),
+
         // backgroundColor: Colors.white,
         body: Column(
           children: [
