@@ -10,7 +10,12 @@ class CustomTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      validator: (v) => "Please Fill The Field",
+      validator: (v) {
+        if (v == null || v.trim().isEmpty) {
+          return "Please Fill The Field";
+        }
+        return null;
+      },
       decoration: InputDecoration(
         hintText: label,
         hintStyle: TextStyle(

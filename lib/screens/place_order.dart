@@ -5,9 +5,10 @@ import 'package:fashion_app/features/compants/custom_dilog.dart';
 import 'package:fashion_app/features/compants/header.dart';
 import 'package:fashion_app/features/core/colors.dart';
 import 'package:fashion_app/screens/add_adrees.dart';
-import 'package:fashion_app/features/home/home.dart';
 import 'package:fashion_app/features/payment/payment.dart';
+import 'package:fashion_app/features/checkout/cubit/checkout_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 
@@ -15,19 +16,13 @@ class PlaceOrder extends StatefulWidget {
   PlaceOrder({
     super.key,
     required this.image,
-
     required this.name,
     required this.supTtile,
-
-    required this.total,
-    required this.qty,
     required this.price,
   });
   final String image;
   final String name;
   final String supTtile;
-  final int qty;
-  final int total;
   final int price;
 
   @override
@@ -35,20 +30,14 @@ class PlaceOrder extends StatefulWidget {
 }
 
 class _PlaceOrderState extends State<PlaceOrder> {
-  dynamic _savedAddres;
-  dynamic _cardPayment;
-
-  void _openAddress(context) async {
+  void _openAddress(BuildContext context) async {
     final addresData = await Navigator.push(
       context,
       MaterialPageRoute(builder: (c) => AddAddress()),
     );
 
-    // ignore: unnecessary_null_comparison
-    if (AddAddress != null) {
-      setState(() {
-        _savedAddres = addresData;
-      });
+    if (addresData != null) {
+      context.read<CheckoutCubit>().saveAddress(addresData);
     }
   }
 
@@ -59,22 +48,27 @@ class _PlaceOrderState extends State<PlaceOrder> {
     );
 
     if (cardData != null) {
-      setState(() {
-        _cardPayment = cardData;
-      });
+      context.read<CheckoutCubit>().savePaymentCard(cardData);
     }
   }
 
   // ignore: unused_element
   void _editData() {
+    final currentAddress = context.read<CheckoutCubit>().state.address;
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (c) => AddAddress(editData: _savedAddres)),
+      MaterialPageRoute(builder: (c) => AddAddress(editData: currentAddress)),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final checkoutState = context.watch<CheckoutCubit>().state;
+    final savedAddress = checkoutState.address;
+    final cardPayment = checkoutState.paymentCard;
+    final qty = checkoutState.quantity;
+    final total = widget.price * qty;
+
     return Scaffold(
       appBar: CustomAppbar(isBlackk: false),
       body: Padding(
@@ -84,7 +78,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
           children: [
             Gap(20),
             Header(title: "Checkout".toUpperCase()),
-            _cardPayment != null
+            cardPayment != null
                 ? SizedBox.shrink()
                 : Text(
                     "Shipping adress".toUpperCase(),
@@ -99,7 +93,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _savedAddres != null
+                savedAddress != null
                     ? Row(
                         children: [
                           Padding(
@@ -108,7 +102,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "${_savedAddres['first']} ${_savedAddres['last']} "
+                                  "${savedAddress['first']} ${savedAddress['last']} "
                                       .toUpperCase(),
                                   style: TextStyle(
                                     color: AppClolrs.primary,
@@ -117,7 +111,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                   ),
                                 ),
                                 Text(
-                                  "${_savedAddres['address']}",
+                                  "${savedAddress['address']}",
                                   style: TextStyle(
                                     color: Color(0xFF555555),
                                     fontSize: 14,
@@ -125,7 +119,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                   ),
                                 ),
                                 Text(
-                                  "${_savedAddres['city']}",
+                                  "${savedAddress['city']}",
                                   style: TextStyle(
                                     color: Color(0xFF555555),
                                     fontSize: 14,
@@ -133,7 +127,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                   ),
                                 ),
                                 Text(
-                                  "${_savedAddres['phone']}",
+                                  "${savedAddress['phone']}",
                                   style: TextStyle(
                                     color: Color(0xFF555555),
                                     fontSize: 14,
@@ -153,8 +147,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
                         ],
                       )
                     : SizedBox.shrink(),
-                _cardPayment != null ? SizedBox.shrink() : Gap(15),
-                _cardPayment != null
+                cardPayment != null ? SizedBox.shrink() : Gap(15),
+                cardPayment != null
                     ? SizedBox.shrink()
                     : Container(
                         width: double.infinity,
@@ -188,8 +182,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
                           ),
                         ),
                       ),
-                _cardPayment != null ? SizedBox.shrink() : Gap(50),
-                _cardPayment != null
+                cardPayment != null ? SizedBox.shrink() : Gap(50),
+                cardPayment != null
                     ? SizedBox.shrink()
                     : Text(
                         "Shipping Method".toUpperCase(),
@@ -200,7 +194,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                         ),
                       ),
                 Gap(10),
-                _cardPayment != null
+                cardPayment != null
                     ? SizedBox.shrink()
                     : Container(
                         width: double.infinity,
@@ -212,7 +206,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                           borderRadius: BorderRadius.circular(40),
                           color: Colors.grey.shade200,
                         ),
-                        child: _cardPayment != null
+                        child: cardPayment != null
                             ? SizedBox.shrink()
                             : Row(
                                 children: [
@@ -241,7 +235,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                               ),
                       ),
                 Gap(30),
-                _cardPayment != null
+                cardPayment != null
                     ? SizedBox.shrink()
                     : Text(
                         "Payment method".toUpperCase(),
@@ -253,7 +247,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                       ),
                 Gap(20),
 
-                _cardPayment != null
+                cardPayment != null
                     ? Column(
                         children: [
                           Divider(color: Colors.grey.shade300),
@@ -269,7 +263,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
 
                               Gap(10),
                               Text(
-                                "••••${_cardPayment['number'].toString().substring(_cardPayment['number'].length - 2)}",
+                                "••••${cardPayment['number'].toString().substring(cardPayment['number'].length - 4)}",
                               ),
                               Spacer(),
                               Icon(
@@ -319,13 +313,16 @@ class _PlaceOrderState extends State<PlaceOrder> {
               ],
             ),
             Gap(20),
-            _cardPayment != null && _savedAddres != null
+            cardPayment != null && savedAddress != null
                 ? CartDetails(
                     image: widget.image,
                     name: widget.name,
                     price: widget.price,
                     supTtile: widget.supTtile,
-                    onChanged: (qty) {},
+                    initialQty: qty,
+                    onChanged: (newQty) {
+                      context.read<CheckoutCubit>().updateQuantity(newQty);
+                    },
                   )
                 : SizedBox.shrink(),
             Spacer(),
@@ -334,7 +331,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                 Text("Total", style: TextStyle(letterSpacing: 3)),
                 Spacer(),
                 Text(
-                  "\$ ${widget.total} ",
+                  "\$ $total ",
                   style: TextStyle(color: Color(0xFFDD8560), fontSize: 16),
                 ),
               ],
@@ -370,3 +367,4 @@ class _PlaceOrderState extends State<PlaceOrder> {
     );
   }
 }
+

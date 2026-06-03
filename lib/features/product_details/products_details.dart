@@ -6,7 +6,9 @@ import 'package:fashion_app/features/core/colors.dart';
 // ignore: unused_import
 import 'package:fashion_app/features/model/product_model.dart';
 import 'package:fashion_app/screens/place_order.dart';
+import 'package:fashion_app/features/checkout/cubit/checkout_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 
@@ -28,9 +30,17 @@ class ProductsDetails extends StatefulWidget {
 }
 
 class _ProductsDetailsState extends State<ProductsDetails> {
-  int selctedQun = 1;
+  @override
+  void initState() {
+    super.initState();
+    context.read<CheckoutCubit>().resetCheckout();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final checkoutState = context.watch<CheckoutCubit>().state;
+    final selctedQun = checkoutState.quantity;
+
     return Scaffold(
       appBar: CustomAppbar(isBlackk: false),
       body: Padding(
@@ -43,10 +53,9 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               name: widget.name,
               supTtile: widget.supTtile,
               price: widget.price,
+              initialQty: selctedQun,
               onChanged: (v) {
-                setState(() {
-                  selctedQun = v;
-                });
+                context.read<CheckoutCubit>().updateQuantity(v);
               },
             ),
             Gap(20),
@@ -96,7 +105,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                 Text("Est. Total", style: TextStyle(letterSpacing: 3)),
                 Spacer(),
                 Text(
-                  "\$ ${widget.price *selctedQun} ",
+                  "\$ ${widget.price * selctedQun} ",
                   style: TextStyle(color: Color(0xFFDD8560), fontSize: 16),
                 ),
               ],
@@ -113,9 +122,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                       image: widget.image,
                       name: widget.name,
                       supTtile: widget.supTtile,
-                      qty: selctedQun,
                       price: widget.price,
-                      total: widget.price * selctedQun,
                     ),
                   ),
                 );
@@ -128,3 +135,4 @@ class _ProductsDetailsState extends State<ProductsDetails> {
     );
   }
 }
+

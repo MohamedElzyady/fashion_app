@@ -8,6 +8,7 @@ class CartDetails extends StatefulWidget {
   final String name;
   final int price;
   final String supTtile;
+  final int initialQty;
   const CartDetails({
     super.key,
     required this.image,
@@ -15,6 +16,7 @@ class CartDetails extends StatefulWidget {
     required this.price,
     required this.supTtile,
     required this.onChanged,
+    this.initialQty = 1,
   });
   final Function(int) onChanged;
 
@@ -23,7 +25,14 @@ class CartDetails extends StatefulWidget {
 }
 
 class _CartDetailsState extends State<CartDetails> {
-  int num = 1;
+  late int num;
+
+  @override
+  void initState() {
+    super.initState();
+    num = widget.initialQty;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
